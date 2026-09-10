@@ -39,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SG-Technical-APK
-          path: SG_Technical_Android/app/build/outputs/apk/debug/*.apk
+          path: SG_Technical_Android/app/build/outputs/apk/debug/*.apk          
