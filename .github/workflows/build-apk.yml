@@ -1,4 +1,4 @@
-name: Build SG Technical APK V3
+name: Build SG Technical APK V4
 
 on:
   workflow_dispatch:
@@ -8,34 +8,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download project
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract V3 Android project
-        run: |
-          unzip -o SG_Technical_ANDROID_PROJECT_V3.zip
-          ls -la SG_Technical_ANDROID_FIXED
+      - name: Download V4 project
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: SG-Technical-APK
 
-      - name: Set up Java
+      - name: Extract V4 project
+        run: |
+          unzip -o SG_Technical_ANDROID_PROJECT_V4.zip -d project
+          echo "Project extracted:"
+          find project -maxdepth 3 -type f | head -30
+
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.10.2'
+          gradle-version: '8.7'
 
       - name: Build APK
-        working-directory: SG_Technical_ANDROID_FIXED
-        run: gradle assembleDebug --stacktrace
+        working-directory: project/SG_Technical_ANDROID_FIXED_V3
+        run: gradle assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: SG-Technical-APK-V3
-          path: SG_Technical_ANDROID_FIXED/app/build/outputs/apk/debug/*.apk
+          name: SG-Technical-APK-V4
+          path: project/SG_Technical_ANDROID_FIXED_V3/app/build/outputs/apk/debug/*.apk
